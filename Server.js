@@ -1,17 +1,17 @@
 'use strict';
 
 const Restify = require('restify');
+const Models = require('./models/index');
 const PORT = 80;
 
-let users = require('./userModel');
 let server = Restify.createServer();
 server.use(Restify.bodyParser());
 
-server.get('/users', users.showUsers);
-server.get('/users/:id', users.showUser);
-server.post('/users', users.saveUser);
-server.put('/users/:id', users.updateUser);
-server.del('users/:id', users.deleteUser);
+server.get('/users', Models.Users.showUsers);
+server.get('/users/:id', Models.Users.showUser);
+server.post('/users', Models.Users.saveUser);
+server.put('/users/:id', Models.Users.updateUser);
+server.del('users/:id', Models.Users.deleteUser);
 
 server.listen(PORT, function () {
   console.log('%s listening at %s', server.name, server.url);

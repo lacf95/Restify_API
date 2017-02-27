@@ -1,17 +1,27 @@
 'use strict';
 
-let users = [];
+let users = [{
+  id: 1,
+  firstName: 'Adrian',
+  lastName: 'Chavez',
+  email: 'lchavez1@ucol.mx',
+  password: '123'
+}];
 let searchedUser = 0;
+let count = 1;
 
 exports.saveUser = (req, resp, next) => {
-  users.push({
-    id: req.params.id,
-    firstName: req.params.firstName,
-    lastName: req.params.lastName,
-    email: req.params.email,
-    password: req. params.password
-  });
-  resp.send(201);
+  if (req.params.email && req.params.password) {
+    users.push({
+      id: ++count,
+      firstName: req.params.firstName,
+      lastName: req.params.lastName,
+      email: req.params.email,
+      password: req. params.password
+    });
+    resp.send(201);
+  } else
+    resp.send(404);
   next();
 }
 
@@ -21,19 +31,21 @@ exports.showUsers = (req, resp, next) => {
 }
 
 exports.showUser = (req, resp, next) => {
-  searchedUser = req.params.id;
+  searchedUser = parseInt(req.params.id);
   let selectedUser = hideSensibleData(users.find(findUser));
   if (selectedUser)
     resp.send(200, selectedUser);
   else
     resp.send(404);
+  next();
 }
 
 exports.updateUser = (req, resp, next) => {
-  searchedUser = req.params.id;
+  searchedUser = parseInt(req.params.id);
   let selectedUser = users.find(findUser);
   if (selectedUser) {
     users[users.indexOf(selectedUser)] = {
+      id: searchedUser,
       firstName: req.params.firstName,
       lastName: req.params.lastName,
       email: req.params.email,
@@ -43,6 +55,7 @@ exports.updateUser = (req, resp, next) => {
   }
   else
     resp.send(404);
+  next();
 };
 
 exports.deleteUser = (req, resp, next) => {
@@ -54,6 +67,7 @@ exports.deleteUser = (req, resp, next) => {
   }
   else
     resp.send(404);
+  next();
 };
 
 function hideSensibleData(user) {
